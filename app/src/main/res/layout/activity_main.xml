@@ -1,100 +1,18 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@android:color/black"
     tools:context=".MainActivity">
 
-   <androidx.recyclerview.widget.RecyclerView
-       android:id="@+id/recycler_view"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_marginBottom="80dp"/>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph" />
 
-   <LinearLayout
-       android:id="@+id/bottom"
-       android:layout_width="match_parent"
-       android:layout_height="80dp"
-       android:layout_alignParentBottom="true"
-       android:background="@color/purple_200"
-       android:orientation="vertical"
-       android:padding="1dp">
-
-      <TextView
-          android:id="@+id/audio_name"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="5dp"
-          android:ellipsize="end"
-          android:textAlignment="center"
-          android:textColor="@color/purple_700"
-          android:textSize="14sp"/>
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="2dp"
-          android:layout_marginRight="2dp"
-          android:orientation="horizontal">
-
-         <TextView
-             android:id="@+id/current"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_gravity="center"
-             android:layout_marginEnd="2dp"
-             android:layout_marginStart="2dp"
-             android:text="00:00"
-             android:textColor="@color/purple_700"/>
-
-         <SeekBar
-             android:id="@+id/seekbar"
-             style="@style/Base.Widget.AppCompat.SeekBar"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_weight="1"
-             android:theme="@style/SeekBar"/>
-
-         <TextView
-             android:id="@+id/total"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_gravity="center"
-             android:layout_marginEnd="2dp"
-             android:layout_marginStart="2dp"
-             android:text="00:00"
-             android:textColor="@color/purple_700"/>
-
-      </LinearLayout>
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="5dp"
-          android:gravity="center"
-          android:orientation="horizontal">
-
-         <ImageView
-             android:id="@+id/prev"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_marginRight="10dp"
-             android:src="@drawable/ic_baseline_skip_previous_24"/>
-
-         <ImageView
-             android:id="@+id/pause"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:src="@drawable/ic_baseline_play_circle_outline_24"/>
-
-         <ImageView
-             android:id="@+id/next"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_marginLeft="10dp"
-             android:src="@drawable/ic_baseline_skip_next_24"/>
-
-      </LinearLayout>
-   </LinearLayout>
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

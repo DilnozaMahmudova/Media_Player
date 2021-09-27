@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="SeekBar" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="colorControlActivated">@color/white</item>
-        <item name="colorControlNormal">@color/gray</item>
+        <item name="colorControlActivated">@color/purple_700</item>
+        <item name="colorControlNormal">@color/purple_700</item>
     </style>
 </resources>
