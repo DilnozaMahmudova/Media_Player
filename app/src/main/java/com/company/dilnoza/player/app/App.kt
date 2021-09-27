@@ -6,8 +6,8 @@ import android.app.NotificationManager
 import android.os.Build
 import com.company.dilnoza.player.BuildConfig
 import com.company.dilnoza.player.data.local.LocalStorage
-import com.sablab.android_simple_music_player.util.Constants.Companion.channelID
-import com.sablab.android_simple_music_player.util.Constants.Companion.notificationChannelName
+import com.company.dilnoza.player.util.Constants.Companion.channelID
+import com.company.dilnoza.player.util.Constants.Companion.notificationChannelName
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 

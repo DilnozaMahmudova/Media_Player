@@ -7,8 +7,9 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.SeekBar
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.company.dilnoza.player.R
 import com.company.dilnoza.player.data.local.LocalStorage
@@ -17,9 +18,10 @@ import com.company.dilnoza.player.playback.MusicService
 import com.company.dilnoza.player.util.extensions.loadImage
 import com.company.dilnoza.player.data.models.Music
 import com.sablab.android_simple_music_player.data.models.enums.ServiceCommand
-import com.sablab.android_simple_music_player.util.Constants
+import com.company.dilnoza.player.util.Constants
 import com.sablab.android_simple_music_player.util.extensions.getAudioInfo
 import com.sablab.android_simple_music_player.util.timberErrorLog
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
@@ -27,9 +29,12 @@ import javax.inject.Inject
  * Created by Mahmudova Dilnoza on 27-Sep-21.
  * icebear03051999@gmail.com
  */
+@AndroidEntryPoint
 class CurrentMusicFragment : Fragment(R.layout.page_music_layout) {
 
     private val binding: PageMusicLayoutBinding by viewBinding(PageMusicLayoutBinding::bind)
+    private val args: CurrentMusicFragmentArgs by navArgs()
+    private lateinit var playingData:Music
 
     @Inject
     lateinit var storage: LocalStorage
@@ -75,27 +80,24 @@ class CurrentMusicFragment : Fragment(R.layout.page_music_layout) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadViews()
+        playingData=args.music
+        startMusicService(playingData, ServiceCommand.PLAY_NEW)
+        binding.btnPlayPause.setImageResource(R.drawable.ic_pause)
+
+        storage.lastPlayedData = playingData.data ?: ""
+        loadPlayingData(playingData)
+
     }
 
     private fun loadViews() {
         requireContext().registerReceiver(clickReceiver, IntentFilter(Constants.ACTION_PLAYER))
-        requireContext().registerReceiver(notificationClickReceiver, IntentFilter(Constants.NOTIFICATION_ACTION_PLAYER))
+        requireContext().registerReceiver(
+            notificationClickReceiver,
+            IntentFilter(Constants.NOTIFICATION_ACTION_PLAYER)
+        )
 
         binding.apply {
-            list.layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            list.addItemDecoration(itemDecoration)
-            list.adapter = adapter
 
-            adapter.setOnItemClickListener {
-                startMusicService(it, ServiceCommand.PLAY_NEW)
-                btnPlayPause.setImageResource(R.drawable.ic_pause)
-
-                storage.lastPlayedData = it.data ?: ""
-                playingData = it
-
-                loadPlayingData(it)
-            }
 
             btnNext.setOnClickListener {
                 val intent = Intent(Constants.NOTIFICATION_ACTION_PLAYER)
@@ -132,10 +134,10 @@ class CurrentMusicFragment : Fragment(R.layout.page_music_layout) {
             }
 
             if (storage.lastPlayedData.isNotEmpty()) {
-                loadLastMusicData()
             }
         }
     }
+
     private fun prevClicked() {
         binding.apply {
             try {
@@ -147,16 +149,15 @@ class CurrentMusicFragment : Fragment(R.layout.page_music_layout) {
 
                 if (t < Constants.allMusics.size) {
                     Constants.allMusics.toList()[t].let { it1 ->
-                        playingData = requireContext().getAudioInfo(it1)
+                        playingData = requireContext().getAudioInfo(it1)!!
                     }
                 }
 //                startMusicService(playingData, serviceCommand = ServiceCommand.PLAY)
                 btnPlayPause.setImageResource(R.drawable.ic_pause)
-                playingData?.let {
+                playingData.let {
                     storage.lastPlayedData = it.data ?: ""
                     loadPlayingData(it)
                 }
-                list.scrollToPosition(t)
             } catch (e: Exception) {
                 timberErrorLog(e.message.toString())
             }
@@ -166,33 +167,50 @@ class CurrentMusicFragment : Fragment(R.layout.page_music_layout) {
     private fun nextClicked() {
         binding.apply {
             try {
-                val pos = Constants.allMusics.indexOf(playingData?.data)
+                val pos = Constants.allMusics.indexOf(playingData.data)
 
                 val t = pos + 1
                 if (t < Constants.allMusics.size) {
                     Constants.allMusics.toList()[t].let { it1 ->
-                        playingData = requireContext().getAudioInfo(it1)
+                        playingData = requireContext().getAudioInfo(it1)!!
                     }
                 }
 //                startMusicService(playingData, serviceCommand = ServiceCommand.PLAY)
                 btnPlayPause.setImageResource(R.drawable.ic_pause)
-                playingData?.let {
+                playingData.let {
                     storage.lastPlayedData = it.data ?: ""
                     loadPlayingData(it)
                 }
-                list.scrollToPosition(t)
             } catch (e: Exception) {
                 timberErrorLog(e.message.toString())
             }
         }
     }
+
     private fun loadPlayingData(it: Music) {
         binding.apply {
             textName.text = it.title
             textAuthorName.text = it.artist
             it.imageUri.let { it1 -> image.loadImage(it1) }
+            seekbar.setOnSeekBarChangeListener( object :SeekBar.OnSeekBarChangeListener{
+
+
+                override fun onProgressChanged(seekBar:SeekBar, progress:Int, fromUser:Boolean) {
+
+                }
+
+              override fun onStartTrackingTouch(seekBar: SeekBar) {
+
+                }
+
+             override fun onStopTrackingTouch(seekBar: SeekBar) {
+//                    current_pos = seekBar.progress;
+//                    mediaPlayer.seekTo((int) current_pos);
+                }
+            });
         }
     }
+
     private fun startMusicService(data: Music? = null, serviceCommand: ServiceCommand) {
         val intent = Intent(context, MusicService::class.java)
         intent.putExtra(Constants.COMMAND_DATA, serviceCommand)
@@ -202,6 +220,20 @@ class CurrentMusicFragment : Fragment(R.layout.page_music_layout) {
             requireContext().startForegroundService(intent)
         } else {
             requireContext().startService(intent)
+        }
+    }
+
+    override fun onDestroyView() {
+
+        requireContext().unregisterReceiver(clickReceiver)
+        requireContext().unregisterReceiver(notificationClickReceiver)
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!storage.isPlaying) {
+            requireContext().stopService(Intent(context, MusicService::class.java))
         }
     }
 }

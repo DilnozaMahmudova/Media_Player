@@ -10,7 +10,7 @@
     android:paddingHorizontal="25dp"
     android:paddingVertical="@dimen/_10dp">
 
-    <com.sablab.android_simple_music_player.util.custom.RoundRectCornerImageView
+    <com.company.dilnoza.player.util.custom.RoundRectCornerImageView
         android:id="@+id/image"
         android:layout_width="@dimen/_52dp"
         android:layout_height="@dimen/_52dp"

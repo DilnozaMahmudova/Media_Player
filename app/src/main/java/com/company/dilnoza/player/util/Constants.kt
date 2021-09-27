@@ -1,4 +1,4 @@
-package com.sablab.android_simple_music_player.util
+package com.company.dilnoza.player.util
 
 class Constants {
 

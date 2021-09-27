@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.company.dilnoza.player.R
@@ -18,10 +19,10 @@ import com.company.dilnoza.player.data.models.Music
 import com.sablab.android_simple_music_player.data.models.enums.ServiceCommand
 import com.company.dilnoza.player.playback.MusicService
 import com.company.dilnoza.player.ui.adapters.MusicsAdapter
-import com.sablab.android_simple_music_player.util.Constants
+import com.company.dilnoza.player.util.Constants
 import com.sablab.android_simple_music_player.util.checkPermissions
-import com.sablab.android_simple_music_player.util.custom.ItemDecorationWithLeftPadding
-import com.sablab.android_simple_music_player.util.custom.dpToPx
+import com.company.dilnoza.player.util.custom.ItemDecorationWithLeftPadding
+import com.company.dilnoza.player.util.custom.dpToPx
 import com.sablab.android_simple_music_player.util.extensions.getAudioInfo
 import com.sablab.android_simple_music_player.util.extensions.getPlayList
 import com.company.dilnoza.player.util.extensions.loadImage
@@ -104,6 +105,7 @@ class PlayListScreen : Fragment(R.layout.screen_playlist) {
             list.adapter = adapter
 
             adapter.setOnItemClickListener {
+                findNavController().navigate(PlayListScreenDirections.actionPlayListScreenToCurrentMusicFragment(it))
                 startMusicService(it, ServiceCommand.PLAY_NEW)
                 btnPlayPause.setImageResource(R.drawable.ic_pause)
 

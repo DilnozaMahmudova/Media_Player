@@ -18,9 +18,9 @@ import com.company.dilnoza.player.R
 import com.company.dilnoza.player.data.local.LocalStorage
 import com.company.dilnoza.player.data.models.Music
 import com.sablab.android_simple_music_player.data.models.enums.ServiceCommand
-import com.sablab.android_simple_music_player.util.Constants
-import com.sablab.android_simple_music_player.util.Constants.Companion.channelID
-import com.sablab.android_simple_music_player.util.Constants.Companion.foregroundServiceNotificationTitle
+import com.company.dilnoza.player.util.Constants
+import com.company.dilnoza.player.util.Constants.Companion.channelID
+import com.company.dilnoza.player.util.Constants.Companion.foregroundServiceNotificationTitle
 import com.sablab.android_simple_music_player.util.extensions.getAudioInfo
 import com.sablab.android_simple_music_player.util.timberErrorLog
 import com.sablab.android_simple_music_player.util.timberLog
@@ -116,7 +116,9 @@ class MusicService : Service() {
             .setDefaults(Notification.DEFAULT_ALL)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setCustomContentView(createView(data))
-            .setAutoCancel(false)
+            .setAutoCancel(true)
+            .setDeleteIntent(PendingIntent.getBroadcast(this.applicationContext,0,Intent(),0))
+            .setOngoing(false)
 
         startForeground(1, notificationBuilder?.build())
     }

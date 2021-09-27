@@ -9,7 +9,7 @@ import com.company.dilnoza.player.databinding.ItemMusicBinding
 import com.company.dilnoza.player.util.custom.CursorAdapter
 import com.company.dilnoza.player.util.extensions.loadImage
 import com.company.dilnoza.player.data.models.Music
-import com.sablab.android_simple_music_player.util.Constants
+import com.company.dilnoza.player.util.Constants
 import com.sablab.android_simple_music_player.util.extensions.*
 
 class MusicsAdapter : CursorAdapter<MusicsAdapter.MusicViewHolder>() {

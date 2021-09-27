@@ -1,4 +1,4 @@
-package com.sablab.android_simple_music_player.util.custom
+package com.company.dilnoza.player.util.custom
 
 import android.content.Context
 import android.graphics.Canvas
